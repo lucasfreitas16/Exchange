@@ -36,12 +36,13 @@ def get_dolar_cotacao():
 
 def get_binance_price():
     try:
-        r = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usdt", timeout=10)
+        r = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd", timeout=10)
         r.raise_for_status()
-        return float(r.json()['bitcoin']['usdt'])
+        return float(r.json()['bitcoin']['usd'])
     except Exception as e:
         print(f"❌ Erro ao buscar preço no CoinGecko: {e}")
         return None
+
 
 def get_mb_price():
     try:
