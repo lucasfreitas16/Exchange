@@ -21,29 +21,35 @@ def enviar_telegram(mensagem):
     }
     try:
         requests.post(url, data=payload)
-    except:
-        print("⚠️ Erro ao enviar mensagem no Telegram.")
+    except Exception as e:
+        print(f"⚠️ Erro ao enviar mensagem no Telegram: {e}")
 
 # === APIs de preços ===
 def get_dolar_cotacao():
     try:
-        r = requests.get("https://economia.awesomeapi.com.br/last/USD-BRL")
+        r = requests.get("https://economia.awesomeapi.com.br/last/USD-BRL", timeout=10)
+        r.raise_for_status()
         return float(r.json()['USDBRL']['bid'])
-    except:
+    except Exception as e:
+        print(f"❌ Erro ao buscar dólar: {e}")
         return 5.00
 
 def get_binance_price():
     try:
-        r = requests.get("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
+        r = requests.get("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT", timeout=10)
+        r.raise_for_status()
         return float(r.json()['price'])
-    except:
+    except Exception as e:
+        print(f"❌ Erro ao buscar preço na Binance: {e}")
         return None
 
 def get_mb_price():
     try:
-        r = requests.get("https://www.mercadobitcoin.net/api/BTC/ticker/")
+        r = requests.get("https://www.mercadobitcoin.net/api/BTC/ticker/", timeout=10)
+        r.raise_for_status()
         return float(r.json()['ticker']['buy'])
-    except:
+    except Exception as e:
+        print(f"❌ Erro ao buscar preço no Mercado Bitcoin: {e}")
         return None
 
 # === Lógica principal ===
@@ -53,7 +59,7 @@ def simular_arbitragem():
     USDT_BRL = get_dolar_cotacao()
 
     if preco_binance_usdt is None or preco_mb_brl is None:
-        print("❌ Erro ao buscar preços.")
+        print("❌ Erro ao buscar preços. (alguma das fontes retornou None)")
         return
 
     preco_binance_brl = preco_binance_usdt * USDT_BRL
