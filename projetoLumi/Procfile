@@ -1,1 +1,1 @@
-worker: python bot_arbitragem_telegram.py
+web: python cripto.py
